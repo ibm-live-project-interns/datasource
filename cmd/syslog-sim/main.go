@@ -16,6 +16,7 @@ func main() {
 	interval := flag.Duration("interval", 2*time.Second, "Interval between batches")
 	batchSize := flag.Int("batch", 5, "Number of messages per batch")
 	totalBatches := flag.Int("batches", 3, "Total batches to send (0 = infinite)")
+	filePath := flag.String("file", "data/syslog-events.json", "File to store syslog events")
 
 	flag.Parse()
 
@@ -26,10 +27,13 @@ func main() {
 		Interval:     *interval,
 		BatchSize:    *batchSize,
 		TotalBatches: *totalBatches,
+		FilePath:     *filePath,
 	}
 
-	fmt.Printf("Starting syslog simulation to %s:%d over %s\n",
-		cfg.Host, cfg.Port, cfg.Protocol)
+	fmt.Printf(
+		"Starting syslog simulation to %s:%d over %s\n",
+		cfg.Host, cfg.Port, cfg.Protocol,
+	)
 
 	if err := syslogsim.RunSimulation(cfg); err != nil {
 		log.Fatalf("simulation failed: %v", err)

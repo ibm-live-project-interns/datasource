@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-// ---------- Severities ----------
-
 type Severity int
 
 const (
@@ -18,11 +16,7 @@ const (
 	SeverityCritical
 )
 
-var severityLabels = []string{"info", "warn", "error", "critical"}
-
 const facility = 1
-
-// ---------- Templates ----------
 
 var networkTemplates = []string{
 	"Interface Gi0/%d changed state to %s",
@@ -36,7 +30,7 @@ var serverTemplates = []string{
 	"Login failure for user %s from IP %s",
 }
 
-// ---------- Config ----------
+//Config
 
 type Config struct {
 	Host         string
@@ -45,9 +39,10 @@ type Config struct {
 	Interval     time.Duration
 	BatchSize    int
 	TotalBatches int
+	FilePath     string
 }
 
-// ---------- Public API ----------
+//Public API
 
 func RunSimulation(cfg Config) error {
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
@@ -62,33 +57,31 @@ func RunSimulation(cfg Config) error {
 	}
 
 	if err != nil {
-		// instead of crashing, just print warning
 		fmt.Println("warning: unable to connect:", err)
-		// NOTE: we still continue because UDP may still send later
-	}
-
-	// IMPORTANT: if conn is nil, future writes will panic
-	// so we create a dummy UDP conn that won't crash
-	if conn == nil {
 		conn, _ = net.Dial("udp", "localhost:0")
 	}
 
 	defer conn.Close()
 
 	rand.Seed(time.Now().UnixNano())
-
 	batchCount := 0
 
 	for {
 		batchCount++
 
 		for i := 0; i < cfg.BatchSize; i++ {
-			msg := randomSyslogMessage()
+			msg, pri := generateSyslog()
 
+			// Send syslog
 			_, err := conn.Write([]byte(msg + "\n"))
 			if err != nil {
-				fmt.Println("warning: failed to send syslog message:", err)
-				continue
+				fmt.Println("warning: failed to send syslog:", err)
+			}
+
+			// Save to JSON
+			err = SaveSyslogToFile(cfg.FilePath, msg, pri)
+			if err != nil {
+				fmt.Println("warning: failed to save syslog:", err)
 			}
 		}
 
@@ -102,9 +95,9 @@ func RunSimulation(cfg Config) error {
 	return nil
 }
 
-// ---------- Helpers ----------
+//Helpers
 
-func randomSyslogMessage() string {
+func generateSyslog() (string, int) {
 	hostname := randomHostname()
 	appName := randomAppName()
 	severity := randomSeverity()
@@ -113,7 +106,12 @@ func randomSyslogMessage() string {
 	timestamp := time.Now().UTC().Format(time.RFC3339)
 	message := randomPayload()
 
-	return fmt.Sprintf("<%d>1 %s %s %s - - - %s", pri, timestamp, hostname, appName, message)
+	syslog := fmt.Sprintf(
+		"<%d>1 %s %s %s - - - %s",
+		pri, timestamp, hostname, appName, message,
+	)
+
+	return syslog, pri
 }
 
 func calcPriority(facility int, severity Severity) int {
@@ -121,13 +119,12 @@ func calcPriority(facility int, severity Severity) int {
 }
 
 func randomSeverity() Severity {
-	return Severity(rand.Intn(len(severityLabels)))
+	return Severity(rand.Intn(4))
 }
 
 func randomHostname() string {
 	devTypes := []string{"router", "switch", "server"}
-	idx := rand.Intn(len(devTypes))
-	return fmt.Sprintf("%s-%02d", devTypes[idx], rand.Intn(20)+1)
+	return fmt.Sprintf("%s-%02d", devTypes[rand.Intn(len(devTypes))], rand.Intn(20)+1)
 }
 
 func randomAppName() string {

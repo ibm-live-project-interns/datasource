@@ -1,0 +1,152 @@
+[
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:43:25Z server-06 sshd - - - BGP session to peer 10.100.179.193 went down",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:43:25.607250586Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:43:25Z router-08 sshd - - - Interface Gi0/14 changed state to down",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:43:25.607511081Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:25Z switch-12 snmpd - - - High memory usage detected on process go-app",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:25.607690926Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:25Z server-08 nginx - - - CPU utilization on router exceeded 92%",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:25.60787518Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:43:25Z server-04 snmpd - - - Login failure for user admin from IP 10.215.170.180",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:43:25.608073069Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:43:27Z server-15 sshd - - - BGP session to peer 10.194.77.206 went down",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:43:27.609419596Z"
+  },
+  {
+    "raw": "\u003c9\u003e1 2025-12-19T18:43:27Z server-06 nginx - - - BGP session to peer 10.11.42.57 went up",
+    "priority": 9,
+    "timestamp": "2025-12-19T18:43:27.609737408Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:27Z switch-14 sshd - - - High memory usage detected on process node",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:27.609935597Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:43:27Z switch-17 kernel - - - Login failure for user admin from IP 10.160.183.121",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:43:27.610252778Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:27Z server-15 syslogd - - - Login failure for user developer from IP 10.57.75.149",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:27.610513665Z"
+  },
+  {
+    "raw": "\u003c9\u003e1 2025-12-19T18:43:29Z router-16 nginx - - - BGP session to peer 10.182.156.95 went flapping",
+    "priority": 9,
+    "timestamp": "2025-12-19T18:43:29.610965635Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:29Z router-16 snmpd - - - Login failure for user admin from IP 10.198.98.76",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:29.611255104Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:29Z switch-02 snmpd - - - CPU utilization on router exceeded 99%",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:29.611690684Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:43:29Z router-04 syslogd - - - High memory usage detected on process java",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:43:29.611971036Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:43:29Z server-14 kernel - - - Login failure for user developer from IP 10.250.41.140",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:43:29.61226801Z"
+  },
+  {
+    "raw": "\u003c9\u003e1 2025-12-19T18:45:44Z router-19 syslogd - - - Login failure for user admin from IP 10.16.252.45",
+    "priority": 9,
+    "timestamp": "2025-12-19T18:45:44.843897259Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:45:44Z server-02 snmpd - - - BGP session to peer 10.215.76.47 went flapping",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:45:44.844254655Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:45:44Z router-16 syslogd - - - CPU utilization on router exceeded 92%",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:45:44.845332764Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:44Z router-15 snmpd - - - CPU utilization on router exceeded 68%",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:44.846204388Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:45:44Z switch-16 kernel - - - Service nginx restarted successfully",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:45:44.84691352Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:45:46Z switch-17 syslogd - - - High memory usage detected on process node",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:45:46.848349194Z"
+  },
+  {
+    "raw": "\u003c9\u003e1 2025-12-19T18:45:46Z router-07 nginx - - - BGP session to peer 10.62.211.228 went down",
+    "priority": 9,
+    "timestamp": "2025-12-19T18:45:46.84877683Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:46Z server-02 snmpd - - - Interface Gi0/23 changed state to flapping",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:46.849103429Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:46Z router-18 snmpd - - - BGP session to peer 10.17.57.238 went up",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:46.849517591Z"
+  },
+  {
+    "raw": "\u003c10\u003e1 2025-12-19T18:45:46Z router-10 syslogd - - - High memory usage detected on process go-app",
+    "priority": 10,
+    "timestamp": "2025-12-19T18:45:46.849888522Z"
+  },
+  {
+    "raw": "\u003c11\u003e1 2025-12-19T18:45:48Z switch-06 nginx - - - Login failure for user root from IP 10.54.161.57",
+    "priority": 11,
+    "timestamp": "2025-12-19T18:45:48.851466611Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:48Z router-19 nginx - - - BGP session to peer 10.10.111.160 went up",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:48.851899958Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:48Z switch-04 snmpd - - - Interface Gi0/31 changed state to down",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:48.852290767Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:48Z server-15 nginx - - - Login failure for user admin from IP 10.101.176.52",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:48.852695551Z"
+  },
+  {
+    "raw": "\u003c8\u003e1 2025-12-19T18:45:48Z router-04 syslogd - - - High memory usage detected on process node",
+    "priority": 8,
+    "timestamp": "2025-12-19T18:45:48.853143145Z"
+  }
+]
