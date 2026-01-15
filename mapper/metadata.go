@@ -3,7 +3,9 @@ package mapper
 import (
 	"encoding/json"
 	"time"
-	"github.com/aishwaryagilhotra/datasource/models"
+
+	"github.com/ibm-live-project-interns/ingestor/shared/constants"
+	"github.com/ibm-live-project-interns/ingestor/shared/models"
 )
 
 type MetadataInput struct {
@@ -21,9 +23,12 @@ func MapMetadata(rawJSON []byte) (models.Event, error) {
 	ts, _ := time.Parse(time.RFC3339, m.Timestamp)
 
 	return models.Event{
-		EventType:      "metadata",
+		EventType:      constants.EventTypeMetadata,
 		SourceHost:     m.Entity,
-		Message:        "Metadata update",
+		SourceIP:       "0.0.0.0", // Metadata doesn't have IP
+		Severity:       constants.SeverityInfo,
+		Category:       "metadata",
+		Message:        "Metadata update for " + m.Entity,
 		RawPayload:     string(rawJSON),
 		EventTimestamp: ts,
 	}, nil

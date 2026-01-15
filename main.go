@@ -3,21 +3,36 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
-	"github.com/aishwaryagilhotra/datasource/db"
-	"github.com/aishwaryagilhotra/datasource/mapper"
+	"github.com/ibm-live-project-interns/datasource/client"
+	"github.com/ibm-live-project-interns/datasource/mapper"
+	"github.com/ibm-live-project-interns/ingestor/shared/config"
 )
 
 func main() {
 	fmt.Println("📡 Datasource starting...")
 
-	// Initialize DB
-	database, err := db.InitDB()
-	if err != nil {
-		log.Fatal("DB init failed:", err)
+	// Validate required environment variables
+	requiredEnvVars := []string{"INGESTOR_CORE_URL"}
+	if err := config.ValidateRequiredEnvVars(requiredEnvVars); err != nil {
+		log.Fatal("Environment validation failed:", err)
 	}
-	defer database.Close()
 
+	// Initialize Ingestor Client
+	ingestorURL := config.GetEnvRequired("INGESTOR_CORE_URL")
+	ingestorClient := client.NewIngestorClient(ingestorURL)
+
+	// Health check
+	fmt.Printf("🔍 Checking Ingestor Core health at %s...\n", ingestorURL)
+	if err := ingestorClient.HealthCheck(); err != nil {
+		log.Printf("⚠️  Warning: Ingestor Core health check failed: %v\n", err)
+		log.Println("Continuing anyway, events will be retried...")
+	} else {
+		fmt.Println("✅ Ingestor Core is healthy")
+	}
+
+	// Process Syslog events
 	rawSyslogs := [][]byte{
 		[]byte(`{
 			"host": "server1",
@@ -33,18 +48,22 @@ func main() {
 		}`),
 	}
 
-	for _, raw := range rawSyslogs {
+	fmt.Println("\n📤 Sending Syslog events...")
+	for i, raw := range rawSyslogs {
 		event, err := mapper.MapSyslog(raw)
 		if err != nil {
-			log.Println("Syslog mapping failed:", err)
+			log.Printf("❌ Syslog %d mapping failed: %v\n", i+1, err)
 			continue
 		}
 
-		if err := db.InsertEvent(database, event); err != nil {
-			log.Println("Syslog insert failed:", err)
+		if err := ingestorClient.SendEvent(event); err != nil {
+			log.Printf("❌ Syslog %d send failed: %v\n", i+1, err)
+		} else {
+			fmt.Printf("✅ Syslog %d sent successfully\n", i+1)
 		}
 	}
 
+	// Process SNMP events
 	rawSNMPs := [][]byte{
 		[]byte(`{
 			"source": "router1",
@@ -55,18 +74,22 @@ func main() {
 		}`),
 	}
 
-	for _, raw := range rawSNMPs {
+	fmt.Println("\n📤 Sending SNMP events...")
+	for i, raw := range rawSNMPs {
 		event, err := mapper.MapSNMP(raw)
 		if err != nil {
-			log.Println("SNMP mapping failed:", err)
+			log.Printf("❌ SNMP %d mapping failed: %v\n", i+1, err)
 			continue
 		}
 
-		if err := db.InsertEvent(database, event); err != nil {
-			log.Println("SNMP insert failed:", err)
+		if err := ingestorClient.SendEvent(event); err != nil {
+			log.Printf("❌ SNMP %d send failed: %v\n", i+1, err)
+		} else {
+			fmt.Printf("✅ SNMP %d sent successfully\n", i+1)
 		}
 	}
 
+	// Process Metadata events
 	rawMetadata := [][]byte{
 		[]byte(`{
 			"entity": "service-auth",
@@ -78,17 +101,21 @@ func main() {
 		}`),
 	}
 
-	for _, raw := range rawMetadata {
+	fmt.Println("\n📤 Sending Metadata events...")
+	for i, raw := range rawMetadata {
 		event, err := mapper.MapMetadata(raw)
 		if err != nil {
-			log.Println("Metadata mapping failed:", err)
+			log.Printf("❌ Metadata %d mapping failed: %v\n", i+1, err)
 			continue
 		}
 
-		if err := db.InsertEvent(database, event); err != nil {
-			log.Println("Metadata insert failed:", err)
+		if err := ingestorClient.SendEvent(event); err != nil {
+			log.Printf("❌ Metadata %d send failed: %v\n", i+1, err)
+		} else {
+			fmt.Printf("✅ Metadata %d sent successfully\n", i+1)
 		}
 	}
 
-	fmt.Println("Syslog + SNMP + Metadata events inserted successfully")
+	fmt.Println("\n🎉 Datasource completed processing all events")
+	os.Exit(0)
 }

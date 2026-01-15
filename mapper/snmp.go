@@ -3,7 +3,9 @@ package mapper
 import (
 	"encoding/json"
 	"time"
-	"github.com/aishwaryagilhotra/datasource/models"
+
+	"github.com/ibm-live-project-interns/ingestor/shared/constants"
+	"github.com/ibm-live-project-interns/ingestor/shared/models"
 )
 
 type SNMPInput struct {
@@ -22,10 +24,15 @@ func MapSNMP(rawJSON []byte) (models.Event, error) {
 
 	ts, _ := time.Parse(time.RFC3339, s.Timestamp)
 
+	// Normalize severity to standard format
+	severity := normalizeSeverity(s.Severity)
+
 	return models.Event{
-		EventType:      "snmp",
+		EventType:      constants.EventTypeSNMP,
 		SourceHost:     s.Source,
-		Severity:       s.Severity,
+		SourceIP:       "0.0.0.0", // TODO: Resolve from source
+		Severity:       severity,
+		Category:       "network",
 		Message:        s.OID + " = " + s.Value,
 		RawPayload:     string(rawJSON),
 		EventTimestamp: ts,

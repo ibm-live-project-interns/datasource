@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"github.com/aishwaryagilhotra/datasource/models"
+	"github.com/ibm-live-project-interns/ingestor/shared/models"
 )
 
 func InsertEvent(db *sql.DB, e models.Event) error {
