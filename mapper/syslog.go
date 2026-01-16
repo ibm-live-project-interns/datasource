@@ -3,7 +3,9 @@ package mapper
 import (
 	"encoding/json"
 	"time"
-	"github.com/aishwaryagilhotra/datasource/models"
+
+	"github.com/ibm-live-project-interns/ingestor/shared/constants"
+	"github.com/ibm-live-project-interns/ingestor/shared/models"
 )
 
 type SyslogInput struct {
@@ -21,12 +23,35 @@ func MapSyslog(rawJSON []byte) (models.Event, error) {
 
 	ts, _ := time.Parse(time.RFC3339, s.Timestamp)
 
+	// Normalize severity to standard format
+	severity := normalizeSeverity(s.Severity)
+
 	return models.Event{
-		EventType:      "syslog",
+		EventType:      constants.EventTypeSyslog,
 		SourceHost:     s.Host,
-		Severity:       s.Severity,
+		SourceIP:       "0.0.0.0", // TODO: Extract from syslog if available
+		Severity:       severity,
+		Category:       "system",
 		Message:        s.Message,
 		RawPayload:     string(rawJSON),
 		EventTimestamp: ts,
 	}, nil
+}
+
+// normalizeSeverity converts various severity formats to standard format
+func normalizeSeverity(severity string) string {
+	switch severity {
+	case "ERROR", "CRITICAL", "ALERT", "EMERGENCY":
+		return constants.SeverityCritical
+	case "WARN", "WARNING":
+		return constants.SeverityHigh
+	case "NOTICE":
+		return constants.SeverityMedium
+	case "DEBUG":
+		return constants.SeverityLow
+	case "INFO", "INFORMATIONAL":
+		return constants.SeverityInfo
+	default:
+		return constants.SeverityInfo
+	}
 }
