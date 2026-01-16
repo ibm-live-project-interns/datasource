@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/aishwaryagilhotra/datasource/db"
 	"github.com/aishwaryagilhotra/datasource/mapper"
@@ -10,6 +11,12 @@ import (
 
 func main() {
 	fmt.Println("📡 Datasource starting...")
+	configPath := "config/sample.yml"
+if len(os.Args) > 1 {
+	configPath = os.Args[1]
+}
+
+log.Printf("Loading config from %s", configPath)
 
 	// Initialize DB
 	database, err := db.InitDB()
