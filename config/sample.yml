@@ -1,0 +1,10 @@
+devices:
+  - name: router-1
+    type: router
+    trap_interval: 5
+    syslog_interval: 10
+
+  - name: switch-1
+    type: switch
+    trap_interval: 8
+    syslog_interval: 15
