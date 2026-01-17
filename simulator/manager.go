@@ -2,6 +2,7 @@ package simulator
 
 import (
 	"context"
+	"log"
 	"sync"
 )
 
@@ -20,10 +21,18 @@ func NewManager() *Manager {
 }
 
 func (m *Manager) Start(ctx context.Context) {
+	if len(m.devices) == 0 {
+		panic("no devices configured for simulation")
+	}
+
+	log.Printf("Starting simulator with %d devices", len(m.devices))
+
 	var wg sync.WaitGroup
 
 	for _, d := range m.devices {
 		wg.Add(1)
+		log.Printf("Launching device simulator: %T", d)
+
 		go func(dev Device) {
 			defer wg.Done()
 			dev.Run(ctx)
@@ -31,4 +40,5 @@ func (m *Manager) Start(ctx context.Context) {
 	}
 
 	wg.Wait()
+	log.Println("All device simulators stopped")
 }
