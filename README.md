@@ -1,4 +1,6 @@
 # Datasource Service
+⚠️ Datasource does not persist events.
+It only generates and forwards events to Ingestor Core.
 
 Simulates or connects to network devices sending SNMP traps, syslogs, and metadata for the NOC Dashboard.
 
