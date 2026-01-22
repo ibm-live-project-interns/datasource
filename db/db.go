@@ -1,4 +1,7 @@
-package db
+// NOTE:
+// This DB package is optional and NOT part of the default datasource runtime.
+// Persistence is handled downstream by Ingestor / API Gateway.
+// This package is retained for local debugging or future extensions.package db
 
 import (
     "database/sql"
