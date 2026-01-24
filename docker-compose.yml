@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  datasource:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prod-datasource-manual
+    networks:
+      - prod_org-network
+    environment:
+      # Infrastructure config
+      - KAFKA_BROKER=kafka:9092
+      
+      # App config (matching your main.go requirements)
+      # We point this to the container name of the ingestor in the orchestration network
+      - INGESTOR_CORE_URL=http://ingestor:8080 
+      - ENV=dev
+    volumes:
+      # Optional: Mount config if you use local YAML files
+      - ./config:/app/config
+
+# ⚠️ CRITICAL: This connects this specific container to the 
+# network already running in your main Orchestrator environment.
+networks:
+  prod_org-network:
+    external: true
