@@ -22,10 +22,14 @@ func MapMetadata(rawJSON []byte) (models.Event, error) {
 
 	ts, _ := time.Parse(time.RFC3339, m.Timestamp)
 
+	// Resolve the entity to an IP address using the resolver
+	// For metadata events, this will typically resolve to 0.0.0.0 if entity is not a hostname
+	sourceIP := ResolveHostIP(m.Entity)
+
 	return models.Event{
 		EventType:      constants.EventTypeMetadata,
 		SourceHost:     m.Entity,
-		SourceIP:       "0.0.0.0", // Metadata doesn't have IP
+		SourceIP:       sourceIP,
 		Severity:       constants.SeverityInfo,
 		Category:       "metadata",
 		Message:        "Metadata update for " + m.Entity,
