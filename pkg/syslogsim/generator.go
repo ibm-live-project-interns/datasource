@@ -30,8 +30,7 @@ var serverTemplates = []string{
 	"Login failure for user %s from IP %s",
 }
 
-//Config
-
+// Config defines the configuration for the syslog simulation.
 type Config struct {
 	Host         string
 	Port         int
@@ -42,9 +41,14 @@ type Config struct {
 	FilePath     string
 }
 
-//Public API
+// Simulator encapsulates syslog simulation logic and state.
+type Simulator struct {
+	cfg  Config
+	conn net.Conn
+}
 
-func RunSimulation(cfg Config) error {
+// NewSimulator creates a new syslog Simulator using the provided configuration.
+func NewSimulator(cfg Config) (*Simulator, error) {
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 
 	var conn net.Conn
@@ -61,43 +65,60 @@ func RunSimulation(cfg Config) error {
 		conn, _ = net.Dial("udp", "localhost:0")
 	}
 
-	defer conn.Close()
-
 	rand.Seed(time.Now().UnixNano())
+
+	return &Simulator{
+		cfg:  cfg,
+		conn: conn,
+	}, nil
+}
+
+// Run starts the syslog traffic simulation.
+// It generates syslog messages, sends them over the network,
+// and optionally persists them to a file.
+func (s *Simulator) Run() error {
+	defer s.conn.Close()
+
 	batchCount := 0
 
 	for {
 		batchCount++
 
-		for i := 0; i < cfg.BatchSize; i++ {
-			msg, pri := generateSyslog()
+		for i := 0; i < s.cfg.BatchSize; i++ {
+			msg, pri := s.generateSyslog()
 
-			// Send syslog
-			_, err := conn.Write([]byte(msg + "\n"))
+			_, err := s.conn.Write([]byte(msg + "\n"))
 			if err != nil {
 				fmt.Println("warning: failed to send syslog:", err)
 			}
 
-			// Save to JSON
-			err = SaveSyslogToFile(cfg.FilePath, msg, pri)
-			if err != nil {
+			if err := SaveSyslogToFile(s.cfg.FilePath, msg, pri); err != nil {
 				fmt.Println("warning: failed to save syslog:", err)
 			}
 		}
 
-		if cfg.TotalBatches > 0 && batchCount >= cfg.TotalBatches {
+		if s.cfg.TotalBatches > 0 && batchCount >= s.cfg.TotalBatches {
 			break
 		}
 
-		time.Sleep(cfg.Interval)
+		time.Sleep(s.cfg.Interval)
 	}
 
 	return nil
 }
 
-//Helpers
+// RunSimulation is a convenience wrapper to quickly start a syslog simulation.
+func RunSimulation(cfg Config) error {
+	sim, err := NewSimulator(cfg)
+	if err != nil {
+		return err
+	}
+	return sim.Run()
+}
 
-func generateSyslog() (string, int) {
+// ---------------- Helper Methods ----------------
+
+func (s *Simulator) generateSyslog() (string, int) {
 	hostname := randomHostname()
 	appName := randomAppName()
 	severity := randomSeverity()
@@ -178,5 +199,9 @@ func randomState() string {
 }
 
 func randomIP() string {
-	return fmt.Sprintf("10.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255))
+	return fmt.Sprintf("10.%d.%d.%d",
+		rand.Intn(255),
+		rand.Intn(255),
+		rand.Intn(255),
+	)
 }
