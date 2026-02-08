@@ -1,0 +1,102 @@
+[
+  {
+    "id": "dev-001",
+    "hostname": "device-001",
+    "ip": "10.245.116.0",
+    "vendor": "Cisco",
+    "model": "ISR-4000",
+    "os": "IOS-XE 17.3",
+    "location": "DC1-Rack1",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-002",
+    "hostname": "device-002",
+    "ip": "10.69.131.228",
+    "vendor": "Huawei",
+    "model": "NE40E",
+    "os": "VRP 8.200",
+    "location": "DC1-Rack2",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-003",
+    "hostname": "device-003",
+    "ip": "10.62.171.197",
+    "vendor": "Cisco",
+    "model": "ISR-4000",
+    "os": "IOS-XE 17.3",
+    "location": "DC2-Rack5",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-004",
+    "hostname": "device-004",
+    "ip": "10.141.45.13",
+    "vendor": "Juniper",
+    "model": "MX480",
+    "os": "JUNOS 21.1",
+    "location": "DC1-Rack1",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-005",
+    "hostname": "device-005",
+    "ip": "10.173.193.45",
+    "vendor": "Cisco",
+    "model": "ISR-4000",
+    "os": "IOS-XE 17.3",
+    "location": "Branch-Delhi",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-006",
+    "hostname": "device-006",
+    "ip": "10.149.99.179",
+    "vendor": "Huawei",
+    "model": "NE40E",
+    "os": "VRP 8.200",
+    "location": "Branch-Delhi",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-007",
+    "hostname": "device-007",
+    "ip": "10.180.93.48",
+    "vendor": "Huawei",
+    "model": "NE40E",
+    "os": "VRP 8.200",
+    "location": "DC1-Rack1",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-008",
+    "hostname": "device-008",
+    "ip": "10.197.185.49",
+    "vendor": "Arista",
+    "model": "7050X3",
+    "os": "EOS 4.28",
+    "location": "DC1-Rack1",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-009",
+    "hostname": "device-009",
+    "ip": "10.190.93.210",
+    "vendor": "Cisco",
+    "model": "ISR-4000",
+    "os": "IOS-XE 17.3",
+    "location": "Branch-Delhi",
+    "updated_at": "2025-12-10T17:55:10Z"
+  },
+  {
+    "id": "dev-010",
+    "hostname": "device-010",
+    "ip": "10.84.231.238",
+    "vendor": "Cisco",
+    "model": "ISR-4000",
+    "os": "IOS-XE 17.3",
+    "location": "Branch-Delhi",
+    "updated_at": "2025-12-10T17:55:10Z"
+  }
+]
