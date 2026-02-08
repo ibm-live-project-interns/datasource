@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"datasource/pkg/metadatasim"
+	"github.com/ibm-live-project-interns/datasource/pkg/metadatasim"
 )
 
 func main() {

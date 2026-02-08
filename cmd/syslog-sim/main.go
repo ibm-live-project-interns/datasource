@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"datasource/pkg/syslogsim"
+	"github.com/ibm-live-project-interns/datasource/pkg/syslogsim"
 )
 
 func main() {

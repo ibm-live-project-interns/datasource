@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"time"
 
-	"datasource/pkg/snmptrap"
+	"github.com/ibm-live-project-interns/datasource/pkg/snmptrap"
 )
 
 func main() {
