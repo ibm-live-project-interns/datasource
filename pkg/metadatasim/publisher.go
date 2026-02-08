@@ -1,3 +1,13 @@
+// Package metadatasim generates and publishes simulated network device metadata.
+//
+// It creates realistic device inventory records (hostname, IP, vendor, model, OS,
+// location) and writes them to a shared JSON file that other services can consume.
+// The publisher supports periodic update cycles to simulate metadata drift (e.g.
+// OS patches, device relocations).
+//
+// TODO: Replace deprecated rand.Seed with rand.New(rand.NewSource(...)) for
+// Go 1.20+ compatibility. Consider accepting a context.Context for graceful
+// shutdown of update cycles.
 package metadatasim
 
 import (
@@ -11,14 +21,14 @@ import (
 
 // Device represents metadata about a network device.
 type Device struct {
-	ID        string `json:"id"`
-	Hostname  string `json:"hostname"`
-	IP        string `json:"ip"`
-	Vendor    string `json:"vendor"`
-	Model     string `json:"model"`
-	OS        string `json:"os"`
-	Location  string `json:"location"`
-	UpdatedAt string `json:"updated_at"`
+	ID        string `json:"id"`         // Unique device identifier (e.g. "dev-001")
+	Hostname  string `json:"hostname"`   // Device hostname (e.g. "device-001")
+	IP        string `json:"ip"`         // Device management IP in the 10.x.x.x range
+	Vendor    string `json:"vendor"`     // Hardware vendor (Cisco, Juniper, Arista, Huawei)
+	Model     string `json:"model"`      // Hardware model matching the vendor
+	OS        string `json:"os"`         // Operating system version matching the vendor
+	Location  string `json:"location"`   // Physical location (datacenter rack or branch office)
+	UpdatedAt string `json:"updated_at"` // Last metadata update timestamp (RFC3339)
 }
 
 // Config controls how metadata is generated and written.

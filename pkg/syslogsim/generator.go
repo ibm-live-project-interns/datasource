@@ -1,3 +1,14 @@
+// Package syslogsim generates and transmits simulated syslog messages over
+// UDP or TCP, following the RFC 5424 syslog message format.
+//
+// The simulator produces realistic network and server event messages with
+// randomized hostnames, application names, severity levels, and payloads.
+// Messages are both sent over the network and optionally persisted to a local
+// JSON file for debugging and replay.
+//
+// TODO: Accept a context.Context in NewSimulator/Run for graceful shutdown
+// support. Replace deprecated rand.Seed with rand.New(rand.NewSource(...))
+// for Go 1.20+.
 package syslogsim
 
 import (
@@ -7,15 +18,17 @@ import (
 	"time"
 )
 
+// Severity represents syslog severity levels per RFC 5424.
 type Severity int
 
 const (
-	SeverityInfo Severity = iota
-	SeverityWarn
-	SeverityError
-	SeverityCritical
+	SeverityInfo     Severity = iota // Informational message
+	SeverityWarn                     // Warning condition
+	SeverityError                    // Error condition
+	SeverityCritical                 // Critical condition requiring immediate action
 )
 
+// facility is the syslog facility code (1 = user-level messages).
 const facility = 1
 
 var networkTemplates = []string{

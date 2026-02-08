@@ -5,6 +5,16 @@ import (
 	"net"
 )
 
+// testListen is an unexported development/debugging utility that listens for
+// incoming SNMP trap data on UDP port 5162 and prints it to stdout.
+//
+// NOTE: This function is intentionally unexported — it exists for local
+// development testing only. It panics on bind errors and silently ignores
+// read errors, which is acceptable for a throwaway debug tool but should not
+// be used in production.
+//
+// TODO: Consider moving this into a cmd/snmp-trap-listener entry point with
+// proper error handling and graceful shutdown support.
 func testListen() {
 	addr, _ := net.ResolveUDPAddr("udp", ":5162")
 	conn, err := net.ListenUDP("udp", addr)

@@ -1,3 +1,21 @@
+# docker-compose.yml — Datasource service standalone deployment
+#
+# This compose file runs the datasource service as an individual container
+# that connects to the main orchestration network (prod_org-network).
+# It is designed to be used alongside the infra/prod docker-compose.yml
+# which manages Kafka, PostgreSQL, and other shared infrastructure.
+#
+# Usage:
+#   docker-compose up --build
+#
+# Prerequisites:
+#   - The prod_org-network must already exist (created by infra/prod/docker-compose.yml)
+#   - Kafka and the ingestor service should be running on that network
+#
+# NOTE: This file references the uppercase "Dockerfile" (ujjwal's multi-stage
+# build without CGO). If you need the Kafka-native build with CGO/librdkafka,
+# you would need to modify the Dockerfile accordingly.
+
 version: '3.8'
 
 services:
@@ -9,19 +27,20 @@ services:
     networks:
       - prod_org-network
     environment:
-      # Infrastructure config
+      # Kafka broker address (matches infra/prod Kafka service)
       - KAFKA_BROKER=kafka:9092
-      
-      # App config (matching your main.go requirements)
-      # We point this to the container name of the ingestor in the orchestration network
-      - INGESTOR_CORE_URL=http://ingestor:8080 
+
+      # Ingestor HTTP endpoint for health checks and direct event delivery
+      - INGESTOR_CORE_URL=http://ingestor:8080
+
+      # Runtime environment (dev/staging/prod)
       - ENV=dev
     volumes:
-      # Optional: Mount config if you use local YAML files
+      # Mount local config directory for YAML-based simulator configuration
       - ./config:/app/config
 
-# ⚠️ CRITICAL: This connects this specific container to the 
-# network already running in your main Orchestrator environment.
+# Connect to the shared orchestration network managed by infra/prod.
+# This network must be created externally before starting this service.
 networks:
   prod_org-network:
     external: true

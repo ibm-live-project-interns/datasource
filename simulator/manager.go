@@ -6,11 +6,20 @@ import (
 	"sync"
 )
 
-// Manager controls multiple device simulators
+// Manager orchestrates multiple concurrent Device simulators.
+// It launches each device in its own goroutine and waits for all to complete.
+//
+// NOTE: The device list is currently hardcoded in NewManager. Future iterations
+// should accept a configuration (e.g. from YAML or CLI flags) to define which
+// devices to simulate and their parameters.
 type Manager struct {
 	devices []Device
 }
 
+// NewManager creates a Manager with a default set of simulated devices.
+//
+// TODO: Accept a device configuration parameter instead of hardcoding the
+// device list. This would allow dynamic device counts and types.
 func NewManager() *Manager {
 	return &Manager{
 		devices: []Device{
@@ -20,6 +29,11 @@ func NewManager() *Manager {
 	}
 }
 
+// Start launches all device simulators concurrently and blocks until all
+// have stopped (either via context cancellation or completion).
+//
+// NOTE: Panics if no devices are configured. Consider returning an error
+// instead to allow callers to handle this gracefully.
 func (m *Manager) Start(ctx context.Context) {
 	if len(m.devices) == 0 {
 		panic("no devices configured for simulation")
