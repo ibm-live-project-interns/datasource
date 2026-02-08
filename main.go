@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/ibm-live-project-interns/datasource/client"
 	"github.com/ibm-live-project-interns/datasource/mapper"
@@ -44,13 +45,13 @@ log.Printf("Loading config from %s", configPath)
 			"host": "server1",
 			"severity": "ERROR",
 			"message": "Disk space low",
-			"timestamp": "2025-01-05T10:45:12Z"
+			"timestamp": "` + time.Now().UTC().Format(time.RFC3339) + `"
 		}`),
 		[]byte(`{
 			"host": "server2",
 			"severity": "WARN",
 			"message": "High memory usage",
-			"timestamp": "2025-01-05T10:46:12Z"
+			"timestamp": "` + time.Now().UTC().Format(time.RFC3339) + `"
 		}`),
 	}
 
@@ -76,7 +77,7 @@ log.Printf("Loading config from %s", configPath)
 			"oid": "1.3.6.1.2.1.1.3",
 			"value": "123456",
 			"severity": "CRITICAL",
-			"timestamp": "2025-01-05T10:47:00Z"
+			"timestamp": "` + time.Now().UTC().Format(time.RFC3339) + `"
 		}`),
 	}
 
@@ -103,7 +104,7 @@ log.Printf("Loading config from %s", configPath)
 				"version": "1.2.3",
 				"region": "ap-south"
 			},
-			"timestamp": "2025-01-05T10:48:00Z"
+			"timestamp": "` + time.Now().UTC().Format(time.RFC3339) + `"
 		}`),
 	}
 
