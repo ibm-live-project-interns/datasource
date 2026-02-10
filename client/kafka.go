@@ -1,3 +1,17 @@
+//go:build kafka
+// +build kafka
+
+// Package client provides clients for communicating with external services.
+//
+// This file implements a Kafka producer for publishing normalized events to
+// the ingestion pipeline. It uses the confluent-kafka-go library which
+// requires CGO and librdkafka.
+//
+// NOTE: The current main.go uses the HTTP IngestorClient (client/ingestor.go)
+// for event delivery. This Kafka producer is available as an alternative
+// transport for environments where Kafka is deployed. The two approaches
+// can coexist — HTTP for direct ingestor communication, Kafka for
+// event-driven architectures.
 package client
 
 import (
@@ -9,12 +23,17 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
+// KafkaProducer wraps a confluent-kafka-go producer with topic configuration.
 type KafkaProducer struct {
 	producer *kafka.Producer
 	topic    string
 }
 
-// NewKafkaProducer initializes the connection
+// NewKafkaProducer creates a Kafka producer configured via the KAFKA_BROKER
+// environment variable. Defaults to "kafka:9092" for Docker environments.
+//
+// TODO: Make the topic name configurable via environment variable or
+// constructor parameter instead of hardcoding "ingestion-events".
 func NewKafkaProducer() (*KafkaProducer, error) {
 	broker := os.Getenv("KAFKA_BROKER")
 	if broker == "" {
@@ -37,7 +56,9 @@ func NewKafkaProducer() (*KafkaProducer, error) {
 	}, nil
 }
 
-// SendEventAsync pushes the mapped event to Kafka
+// SendEventAsync serializes the event as JSON and produces it to the configured
+// Kafka topic asynchronously. Delivery success/failure is handled in a background
+// goroutine via the delivery channel.
 func (kp *KafkaProducer) SendEventAsync(event interface{}) error {
 	// 1. Serialize
 	val, err := json.Marshal(event)
@@ -61,7 +82,7 @@ func (kp *KafkaProducer) SendEventAsync(event interface{}) error {
 		e := <-deliveryChan
 		m := e.(*kafka.Message)
 		if m.TopicPartition.Error != nil {
-			log.Printf("❌ Kafka delivery failed: %v", m.TopicPartition.Error)
+			log.Printf("kafka delivery failed: %v", m.TopicPartition.Error)
 		} else {
 			// Optional: Log success (can be noisy)
 			// log.Printf("✅ Delivered to %v", m.TopicPartition)
@@ -72,6 +93,9 @@ func (kp *KafkaProducer) SendEventAsync(event interface{}) error {
 	return nil
 }
 
+// Close flushes any pending messages (up to 15 seconds) and closes the
+// underlying Kafka producer. Always call Close before program exit to
+// ensure all buffered messages are delivered.
 func (kp *KafkaProducer) Close() {
 	kp.producer.Flush(15 * 1000)
 	kp.producer.Close()

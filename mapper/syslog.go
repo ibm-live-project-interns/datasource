@@ -26,10 +26,13 @@ func MapSyslog(rawJSON []byte) (models.Event, error) {
 	// Normalize severity to standard format
 	severity := normalizeSeverity(s.Severity)
 
+	// Resolve the hostname to an IP address using the resolver
+	sourceIP := ResolveHostIP(s.Host)
+
 	return models.Event{
 		EventType:      constants.EventTypeSyslog,
 		SourceHost:     s.Host,
-		SourceIP:       "0.0.0.0", // TODO: Extract from syslog if available
+		SourceIP:       sourceIP,
 		Severity:       severity,
 		Category:       "system",
 		Message:        s.Message,

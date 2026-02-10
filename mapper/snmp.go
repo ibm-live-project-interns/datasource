@@ -27,10 +27,13 @@ func MapSNMP(rawJSON []byte) (models.Event, error) {
 	// Normalize severity to standard format
 	severity := normalizeSeverity(s.Severity)
 
+	// Resolve the source to an IP address using the resolver
+	sourceIP := ResolveHostIP(s.Source)
+
 	return models.Event{
 		EventType:      constants.EventTypeSNMP,
 		SourceHost:     s.Source,
-		SourceIP:       "0.0.0.0", // TODO: Resolve from source
+		SourceIP:       sourceIP,
 		Severity:       severity,
 		Category:       "network",
 		Message:        s.OID + " = " + s.Value,
