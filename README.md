@@ -1,6 +1,6 @@
-# Datasource Service
+# Sentrix Datasource
 
-Simulates network devices generating SNMP traps, syslog events, and device metadata for the NOC Platform. Events are validated using the shared Event model and forwarded to Ingestor Core via HTTP with retry logic.
+Simulates network devices generating SNMP traps, syslog events, and device metadata for Sentrix. Events are validated using the shared Event model and forwarded to Ingestor Core via HTTP with retry logic.
 
 > **Note:** The datasource does not persist events to a database by default. It generates and forwards events to the ingestor pipeline.
 
@@ -119,7 +119,7 @@ datasource/
 
 ### Prerequisites
 
-- Go 1.23+
+- Go 1.24+
 - Ingestor Core running at `http://localhost:8001`
 
 ### Run the Main Service
@@ -319,7 +319,7 @@ go test -v ./client/...
 Multi-stage build targeting the main entry point:
 
 ```dockerfile
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 # Copies ingestor/shared for cross-module dependency
 # Build context must be the parent directory
 RUN go build -o datasource .
